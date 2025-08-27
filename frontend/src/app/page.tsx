@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Task, TaskStatus, CreateTaskDto, UpdateTaskDto, TaskStats } from '@/types/task';
-import { taskApi, ApiError } from '@/lib/api';
+import { taskApi } from '@/lib/api';
 import { TaskCard } from '@/components/TaskCard';
 import { TaskForm } from '@/components/TaskForm';
 import { TaskStatsComponent } from '@/components/TaskStats';
@@ -28,7 +28,7 @@ export default function Home() {
   const [formLoading, setFormLoading] = useState(false);
 
   // Fetch tasks and stats
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const [tasksData, statsData] = await Promise.all([
@@ -43,11 +43,11 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
 
   useEffect(() => {
     fetchData();
-  }, [filter]);
+  }, [fetchData]);
 
   // Handle task creation
   const handleCreateTask = async (data: CreateTaskDto) => {

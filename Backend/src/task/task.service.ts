@@ -21,7 +21,7 @@ export class TaskService {
 
   async findAll(filterDto?: FilterTasksDto): Promise<Task[]> {
     const where = filterDto?.status ? { status: filterDto.status } : {};
-    
+
     return this.prisma.task.findMany({
       where,
       orderBy: { createdAt: 'desc' },
@@ -59,9 +59,15 @@ export class TaskService {
 
   async getTaskStats() {
     const totalTasks = await this.prisma.task.count();
-    const todoTasks = await this.prisma.task.count({ where: { status: TaskStatus.TODO } });
-    const inProgressTasks = await this.prisma.task.count({ where: { status: TaskStatus.IN_PROGRESS } });
-    const doneTasks = await this.prisma.task.count({ where: { status: TaskStatus.DONE } });
+    const todoTasks = await this.prisma.task.count({
+      where: { status: TaskStatus.TODO },
+    });
+    const inProgressTasks = await this.prisma.task.count({
+      where: { status: TaskStatus.IN_PROGRESS },
+    });
+    const doneTasks = await this.prisma.task.count({
+      where: { status: TaskStatus.DONE },
+    });
 
     return {
       total: totalTasks,

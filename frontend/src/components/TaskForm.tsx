@@ -9,12 +9,22 @@ import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { X } from 'lucide-react';
 
-interface TaskFormProps {
-  task?: Task;
-  onSubmit: (data: CreateTaskDto | UpdateTaskDto) => Promise<void>;
+type BaseTaskFormProps = {
   onCancel: () => void;
   loading?: boolean;
-}
+};
+
+type CreateTaskFormProps = BaseTaskFormProps & {
+  task?: undefined;
+  onSubmit: (data: CreateTaskDto) => Promise<void>;
+};
+
+type EditTaskFormProps = BaseTaskFormProps & {
+  task: Task;
+  onSubmit: (data: UpdateTaskDto) => Promise<void>;
+};
+
+type TaskFormProps = CreateTaskFormProps | EditTaskFormProps;
 
 const statusOptions = [
   { value: TaskStatus.TODO, label: 'To Do' },
